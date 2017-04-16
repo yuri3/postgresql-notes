@@ -1,0 +1,19 @@
+{
+  "name": "postgresql-notes",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "nodemon": "1.11.0"
+  },
+  "dependencies": {
+    "body-parser": "1.17.1",
+    "express": "4.15.2",
+    "morgan": "1.8.1",
+    "pg": "6.1.5",
+    "pg-hstore": "2.3.2",
+    "sequelize": "3.30.4"
+  },
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  }
+}
