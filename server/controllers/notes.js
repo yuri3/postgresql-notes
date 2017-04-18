@@ -6,6 +6,7 @@ module.exports = {
     return Note.create({
       name: req.body.name,
       description: req.body.description,
+      order: req.body.index,
       folderId: req.params.folderId,
     })
       .then(notes => res.status(201).send(notes))

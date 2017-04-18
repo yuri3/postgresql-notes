@@ -14,6 +14,7 @@ module.exports = {
       order: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        unique: true,
       },
       parentId: {
         type: Sequelize.INTEGER,

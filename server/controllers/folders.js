@@ -2,17 +2,30 @@ const Folder = require('../models').Folder;
 const Note = require('../models').Note;
 const Tag = require('../models').Tag;
 
+const findFolderByOrder = (order) => {
+  return Folder.findOne({
+    where: {order: order}
+  }).then(folder => {
+    if(!folder) {
+      return 'Folder Not Found';
+    }
+    return folder;
+  }).catch(error => error.message);
+};
+
 module.exports = {
   create(req, res) {
     let promise;
     if(req.body.name === 'New Folder') {
       promise = Folder.create({
         name: req.body.name,
+        order: req.body.index,
         parentId: req.body.parentId,
       });
     } else {
       promise = Folder.create({
         name: req.body.name,
+        order: req.body.order,
       });
     }
     return promise
@@ -21,6 +34,10 @@ module.exports = {
   },
   list(req, res) {
     return Folder.findAll({
+      order: [
+        //['updatedAt', 'DESC']
+        ['order']
+      ]
       /*include: [{
         model: Note,
         as: 'notes',
@@ -34,16 +51,7 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   update(req, res) {
-    return Folder.findById(req.body.id, {
-      /*include: [{
-        model: Note,
-        as: 'notes',
-        include: [{
-          model: Tag,
-          as: 'tags',
-        }]
-      }],*/
-    })
+    return Folder.findById(req.body.id)
       .then(folder => {
         if(!folder) {
           return res.status(404).send({
@@ -56,6 +64,8 @@ module.exports = {
       })
       .catch(error => res.status(400).send(error));
   },
+  moveFolder(req, res) {
+  },
   destroy(req, res) {
     return Folder.findById(req.body.id)
       .then(folder => {
@@ -65,7 +75,7 @@ module.exports = {
           });
         }
         return folder.destroy()
-          .then(() => res.status(200).send({message: 'Folder deleted successfully.'}))
+          .then(() => res.status(200).send({id: req.body.id, message: 'Folder deleted successfully.'}))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
