@@ -14,11 +14,16 @@ module.exports = {
       order: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
       },
       parentId: {
         type: Sequelize.INTEGER,
         allowNull: true,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Folders',
+          key: 'id',
+          as: 'parentId',
+        },
       },
       createdAt: {
         type: Sequelize.DATE,

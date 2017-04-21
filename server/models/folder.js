@@ -7,15 +7,17 @@ module.exports = (sequelize, DataTypes) => {
     order: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
-    },
-    parentId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
     },
   }, {
     classMethods: {
       associate: (models) => {
+        Folder.hasMany(Folder, {
+          foreignKey: 'parentId',
+        });
+        Folder.belongsTo(Folder, {
+          foreignKey: 'parentId',
+          onDelete: 'CASCADE',
+        });
         Folder.hasMany(models.Note, {
           foreignKey: 'folderId',
           as: 'notes',

@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     order: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
     },
   }, {
     classMethods: {

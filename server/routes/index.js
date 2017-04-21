@@ -5,8 +5,8 @@ const tagsController = require('../controllers').tags;
 module.exports = (app) => {
   app.post('/notes', foldersController.create);
   app.get('/notes', foldersController.list);
-  //app.put('/notes', foldersController.update);
-  app.put('/notes', foldersController.moveFolder);
+  app.put('/notes', foldersController.update);
+  //app.put('/notes', foldersController.moveFolder);
   app.delete('/notes', foldersController.destroy);
 
   app.post('/notes/:folderId', notesController.create);

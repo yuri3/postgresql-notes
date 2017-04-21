@@ -2,30 +2,19 @@ const Folder = require('../models').Folder;
 const Note = require('../models').Note;
 const Tag = require('../models').Tag;
 
-const findFolderByOrder = (order) => {
-  return Folder.findOne({
-    where: {order: order}
-  }).then(folder => {
-    if(!folder) {
-      return 'Folder Not Found';
-    }
-    return folder;
-  }).catch(error => error.message);
-};
-
 module.exports = {
   create(req, res) {
     let promise;
     if(req.body.name === 'New Folder') {
       promise = Folder.create({
-        name: req.body.name,
-        order: req.body.index,
         parentId: req.body.parentId,
+        order: req.body.order,
+        name: req.body.name,
       });
     } else {
       promise = Folder.create({
-        name: req.body.name,
         order: req.body.order,
+        name: req.body.name,
       });
     }
     return promise
@@ -36,7 +25,7 @@ module.exports = {
     return Folder.findAll({
       order: [
         //['updatedAt', 'DESC']
-        ['order']
+        ['order', 'DESC']
       ]
       /*include: [{
         model: Note,
@@ -75,7 +64,11 @@ module.exports = {
           });
         }
         return folder.destroy()
-          .then(() => res.status(200).send({id: req.body.id, message: 'Folder deleted successfully.'}))
+          .then(() => res.status(200).send({
+            id: req.body.id,
+            parentId: req.body.parentId,
+            message: 'Folder deleted successfully.'
+          }))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
