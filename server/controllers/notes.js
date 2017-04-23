@@ -6,7 +6,7 @@ module.exports = {
     return Note.create({
       name: req.body.name,
       description: req.body.description,
-      order: req.body.index,
+      order: req.body.order,
       folderId: req.params.folderId,
     })
       .then(notes => res.status(201).send(notes))
@@ -17,10 +17,13 @@ module.exports = {
       where: {
         folderId: req.params.folderId,
       },
-      include: [{
+      order: [
+        ['order', 'DESC']
+      ],
+      /*include: [{
         model: Tag,
         as: 'tags',
-      }],
+      }],*/
     })
       .then(notes => res.status(200).send(notes))
       .catch(error => res.status(400).send(error))
@@ -31,10 +34,10 @@ module.exports = {
         folderId: req.params.folderId,
         id: req.params.noteId,
       },
-      include: [{
+      /*include: [{
         model: Tag,
         as: 'tags',
-      }],
+      }],*/
     })
       .then(note => {
         if(!note) {
@@ -47,16 +50,7 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   update(req, res) {
-    return Note.findOne({
-      where: {
-        folderId: req.params.folderId,
-        id: req.params.noteId,
-      },
-      include: [{
-        model: Tag,
-        as: 'tags',
-      }],
-    })
+    return Note.findById(req.params.noteId)
       .then(note => {
         if(!note) {
           return res.status(404).send({
@@ -70,12 +64,7 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   destroy(req, res) {
-    return Note.findOne({
-      where: {
-        folderId: req.params.folderId,
-        id: req.body.id,
-      },
-    })
+    return Note.findById(req.body.id)
       .then(note => {
         if(!note) {
           return res.status(404).send({
@@ -83,7 +72,10 @@ module.exports = {
           });
         }
         return note.destroy()
-          .then(() => res.status(200).send({message: 'Note deleted successfully.'}))
+          .then(() => res.status(200).send({
+            id: req.body.id,
+            message: 'Note deleted successfully.'
+          }))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
