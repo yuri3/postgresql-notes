@@ -1,6 +1,7 @@
-const foldersController = require('../controllers').folders;
-const notesController = require('../controllers').notes;
-const tagsController = require('../controllers').tags;
+const foldersController = require('../controllers/folders');
+const notesController = require('../controllers/notes');
+const tagsController = require('../controllers/tags');
+const searchController = require('./notes');
 
 module.exports = (app) => {
   app.post('/folders', foldersController.create);
@@ -9,6 +10,7 @@ module.exports = (app) => {
   app.put('/folders/drag', foldersController.moveFolder);
   app.delete('/folders', foldersController.destroy);
 
+  app.get('/notes/search', searchController.search);
   app.post('/notes/:folderId', notesController.create);
   app.get('/notes/:folderId', notesController.list);
   app.delete('/notes/:folderId', notesController.destroy);
@@ -16,7 +18,7 @@ module.exports = (app) => {
   app.get('/notes/:folderId/:noteId', notesController.retrieve);
   app.put('/notes/:folderId/:noteId', notesController.update);
 
-  app.post('/tags/:folderId/:noteId', tagsController.create);
-  app.get('/tags/:folderId/:noteId/tags', tagsController.list);
-  app.delete('/tags/:folderId/:noteId/tags', tagsController.destroy);
+  app.post('/tags/:noteId', tagsController.create);
+  app.get('/tags/:noteId', tagsController.list);
+  app.delete('/tags/:noteId', tagsController.destroy);
 };

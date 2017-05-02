@@ -18,25 +18,16 @@ module.exports = {
       });
     }
     return promise
-      .then(folder => res.status(201).send(folder))
+      .then(folder => res.send(folder))
       .catch(error => res.status(400).send(error));
   },
   list(req, res) {
     return Folder.findAll({
       order: [
-        //['updatedAt', 'DESC']
         ['order', 'DESC']
       ]
-      /*include: [{
-        model: Note,
-        as: 'notes',
-        include: [{
-          model: Tag,
-          as: 'tags',
-        }]
-      }],*/
     })
-      .then(folders => res.status(200).send(folders))
+      .then(folders => res.send(folders))
       .catch(error => res.status(400).send(error));
   },
   update(req, res) {
@@ -48,7 +39,7 @@ module.exports = {
           });
         }
         return folder.update(req.body, {fields: Object.keys(req.body)})
-          .then(() => res.status(200).send(folder))
+          .then(() => res.send(folder))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
@@ -64,7 +55,7 @@ module.exports = {
           });
         }
         return folder.destroy()
-          .then(() => res.status(200).send({
+          .then(() => res.send({
             id: req.body.id,
             parentId: req.body.parentId,
             message: 'Folder deleted successfully.'

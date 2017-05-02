@@ -5,26 +5,28 @@ module.exports = {
     return Tag.create({
       label: req.body.label,
       noteId: req.params.noteId,
+      order: req.body.order,
     })
-      .then(tags => res.status(201).send(tags))
+      .then(tag => res.send(tag))
       .catch(error => res.status(400).send(error));
   },
   list(req, res) {
-    return Tag.findAll({
-      where: {
-        noteId: req.params.noteId,
-      },
-    })
-      .then(tags => res.status(200).send(tags))
+    let promise;
+    if(req.params.noteId !== 'null') {
+      promise = Tag.findAll({
+        where: {
+          noteId: req.params.noteId,
+        },
+      });
+    } else {
+      promise = Tag.findAll({});
+    }
+    return promise
+      .then(tags => res.send(tags))
       .catch(error => res.status(400).send(error))
   },
   destroy(req, res) {
-    return Tag.findOne({
-      where: {
-        noteId: req.params.noteId,
-        id: req.body.id,
-      },
-    })
+    return Tag.findById(req.body.id)
       .then(tag => {
         if(!tag) {
           return res.status(404).send({
@@ -32,7 +34,10 @@ module.exports = {
           });
         }
         return tag.destroy()
-          .then(() => res.status(200).send({message: 'Tag deleted successfully.'}))
+          .then(() => res.send({
+            id: req.body.id,
+            message: 'Tag deleted successfully.'
+          }))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));

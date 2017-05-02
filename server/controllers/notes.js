@@ -9,23 +9,32 @@ module.exports = {
       order: req.body.order,
       folderId: req.params.folderId,
     })
-      .then(notes => res.status(201).send(notes))
+      .then(note => res.send(note))
       .catch(error => res.status(400).send(error));
   },
   list(req, res) {
-    return Note.findAll({
-      where: {
-        folderId: req.params.folderId,
-      },
-      order: [
-        ['order', 'DESC']
-      ],
-      /*include: [{
-        model: Tag,
-        as: 'tags',
-      }],*/
-    })
-      .then(notes => res.status(200).send(notes))
+    let promise;
+    if(req.params.folderId !== 'null') {
+      promise = Note.findAll({
+        where: {
+          folderId: req.params.folderId,
+        },
+        order: [
+          ['order', 'DESC']
+        ],
+      });
+    } else {
+      promise = Note.findAll({
+        order: [
+          ['order', 'DESC']
+        ],
+      });
+    }
+    return promise
+      .then(notes => {
+        console.log('notes');
+        res.send(notes)
+      })
       .catch(error => res.status(400).send(error))
   },
   retrieve(req, res) {
@@ -34,10 +43,6 @@ module.exports = {
         folderId: req.params.folderId,
         id: req.params.noteId,
       },
-      /*include: [{
-        model: Tag,
-        as: 'tags',
-      }],*/
     })
       .then(note => {
         if(!note) {
@@ -45,7 +50,7 @@ module.exports = {
             message: 'Note Not Found',
           });
         }
-        return res.status(200).send(note);
+        return res.send(note);
       })
       .catch(error => res.status(400).send(error));
   },
@@ -58,7 +63,7 @@ module.exports = {
           });
         }
         return note.update(req.body, {fields: Object.keys(req.body)})
-          .then(() => res.status(200).send(note))
+          .then(() => res.send(note))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
@@ -72,7 +77,7 @@ module.exports = {
           });
         }
         return note.destroy()
-          .then(() => res.status(200).send({
+          .then(() => res.send({
             id: req.body.id,
             message: 'Note deleted successfully.'
           }))
