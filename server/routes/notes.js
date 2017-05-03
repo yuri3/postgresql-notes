@@ -1,7 +1,6 @@
 const storage = require('../controllers/search');
 
 const search = async (req, res) => {
-  console.log(req.query);
   const {deepQ, q} = req.query;
   if(deepQ === '') {
     res.send({

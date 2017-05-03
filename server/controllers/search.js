@@ -11,7 +11,7 @@ module.exports = {
         }
       },
       order: [
-        ['order', 'DESC']
+        ['createdAt', 'DESC']
       ],
       row: true
     });
@@ -23,7 +23,7 @@ module.exports = {
           }
         },
         order: [
-          ['order', 'DESC']
+          ['createdAt', 'DESC']
         ],
         row: true
       });

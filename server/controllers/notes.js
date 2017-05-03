@@ -3,7 +3,7 @@ const Tag = require('../models').Tag;
 
 module.exports = {
   create(req, res) {
-    return Note.create({
+    Note.create({
       name: req.body.name,
       description: req.body.description,
       order: req.body.order,
@@ -20,25 +20,22 @@ module.exports = {
           folderId: req.params.folderId,
         },
         order: [
-          ['order', 'DESC']
+          ['createdAt', 'DESC']
         ],
       });
     } else {
       promise = Note.findAll({
         order: [
-          ['order', 'DESC']
+          ['createdAt', 'DESC']
         ],
       });
     }
-    return promise
-      .then(notes => {
-        console.log('notes');
-        res.send(notes)
-      })
-      .catch(error => res.status(400).send(error))
+    promise
+      .then(notes => res.send(notes))
+      .catch(error => res.status(400).send(error));
   },
   retrieve(req, res) {
-    return Note.findOne({
+    Note.findOne({
       where: {
         folderId: req.params.folderId,
         id: req.params.noteId,
@@ -46,37 +43,37 @@ module.exports = {
     })
       .then(note => {
         if(!note) {
-          return res.status(404).send({
+          res.status(404).send({
             message: 'Note Not Found',
           });
         }
-        return res.send(note);
+        res.send(note);
       })
       .catch(error => res.status(400).send(error));
   },
   update(req, res) {
-    return Note.findById(req.params.noteId)
+    Note.findById(req.params.noteId)
       .then(note => {
         if(!note) {
-          return res.status(404).send({
+          res.status(404).send({
             message: 'Note Not Found',
           });
         }
-        return note.update(req.body, {fields: Object.keys(req.body)})
+        note.update(req.body, {fields: Object.keys(req.body)})
           .then(() => res.send(note))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
   },
   destroy(req, res) {
-    return Note.findById(req.body.id)
+    Note.findById(req.body.id)
       .then(note => {
         if(!note) {
-          return res.status(404).send({
+          res.status(404).send({
             message: 'Note Not Found',
           });
         }
-        return note.destroy()
+        note.destroy()
           .then(() => res.send({
             id: req.body.id,
             message: 'Note deleted successfully.'

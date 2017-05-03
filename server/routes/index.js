@@ -7,7 +7,6 @@ module.exports = (app) => {
   app.post('/folders', foldersController.create);
   app.get('/folders', foldersController.list);
   app.put('/folders', foldersController.update);
-  app.put('/folders/drag', foldersController.moveFolder);
   app.delete('/folders', foldersController.destroy);
 
   app.get('/notes/search', searchController.search);
@@ -19,6 +18,6 @@ module.exports = (app) => {
   app.put('/notes/:folderId/:noteId', notesController.update);
 
   app.post('/tags/:noteId', tagsController.create);
-  app.get('/tags/:noteId', tagsController.list);
-  app.delete('/tags/:noteId', tagsController.destroy);
+  app.get('/tags', tagsController.list);
+  app.delete('/tags', tagsController.destroy);
 };

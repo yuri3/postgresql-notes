@@ -22,39 +22,37 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   list(req, res) {
-    return Folder.findAll({
+    Folder.findAll({
       order: [
-        ['order', 'DESC']
+        ['createdAt', 'DESC']
       ]
     })
       .then(folders => res.send(folders))
       .catch(error => res.status(400).send(error));
   },
   update(req, res) {
-    return Folder.findById(req.body.id)
+    Folder.findById(req.body.id)
       .then(folder => {
         if(!folder) {
-          return res.status(404).send({
+          res.status(404).send({
             message: 'Folder Not Found',
           });
         }
-        return folder.update(req.body, {fields: Object.keys(req.body)})
+        folder.update(req.body, {fields: Object.keys(req.body)})
           .then(() => res.send(folder))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
   },
-  moveFolder(req, res) {
-  },
   destroy(req, res) {
-    return Folder.findById(req.body.id)
+    Folder.findById(req.body.id)
       .then(folder => {
         if(!folder) {
-          return res.status(404).send({
+          res.status(404).send({
             message: 'Folder Not Found',
           });
         }
-        return folder.destroy()
+        folder.destroy()
           .then(() => res.send({
             id: req.body.id,
             parentId: req.body.parentId,
