@@ -1,25 +1,46 @@
 const Folder = require('../models').Folder;
-const Note = require('../models').Note;
-const Tag = require('../models').Tag;
 
 module.exports = {
   create(req, res) {
-    let promise;
-    if(req.body.name === 'New Folder') {
-      promise = Folder.create({
-        parentId: req.body.parentId,
-        order: req.body.order,
-        name: req.body.name,
-      });
-    } else {
-      promise = Folder.create({
-        order: req.body.order,
-        name: req.body.name,
-      });
-    }
-    return promise
-      .then(folder => res.send(folder))
-      .catch(error => res.status(400).send(error));
+    Folder.findAll({}).then(folders => {
+      if(
+        folders.some(folder =>
+          folder && !folder.parentId &&
+          !req.body.parentId && folder.name === req.body.name)
+      ) {
+        res.status(400).send({message: 'This name is already taken!'});
+      } else if(
+        folders.some(folder =>
+          folder && folder.parentId &&
+          folder.parentId === Number.parseInt(req.body.parentId, 10) &&
+          req.body.name !== 'New Folder' &&
+          folder.name === req.body.name)
+      ) {
+        res.status(400).send({message: 'This name is already taken!'});
+      } else if(
+        folders.some(folder =>
+        folder && req.body.parentId &&
+        folder.name !== 'New Folder' &&
+        folder.name === req.body.name)
+      ) {
+        res.status(400).send({message: 'This name is already taken!'});
+      } else {
+        let promise;
+        if(req.body.name === 'New Folder') {
+          promise = Folder.create({
+            parentId: req.body.parentId,
+            name: req.body.name,
+          });
+        } else {
+          promise = Folder.create({
+            name: req.body.name,
+          });
+        }
+        return promise
+          .then(folder => res.send(folder))
+          .catch(error => res.status(400).send(error));
+      }
+    });
   },
   list(req, res) {
     Folder.findAll({

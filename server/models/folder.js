@@ -3,10 +3,16 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    order: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'The folder name is Required!',
+        },
+        len: {
+          args: [1, 18],
+          msg: 'The folder name must be from 1 to 18 characters!',
+        },
+      },
     },
   }, {
     classMethods: {

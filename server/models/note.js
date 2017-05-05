@@ -3,6 +3,15 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'The "Name" field is Required!',
+        },
+        len: {
+          args: [1, 18],
+          msg: 'The "Name" field must be from 1 to 18 characters!',
+        },
+      },
     },
     description: {
       type: DataTypes.TEXT,
