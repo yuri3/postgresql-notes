@@ -6,7 +6,6 @@ module.exports = {
     Note.create({
       name: req.body.name,
       description: req.body.description,
-      order: req.body.order,
       folderId: req.params.folderId,
     })
       .then(note => res.send(note))
@@ -52,18 +51,28 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   update(req, res) {
-    Note.findById(req.params.noteId)
-      .then(note => {
-        if(!note) {
-          res.status(404).send({
-            message: 'Note Not Found',
-          });
-        }
-        note.update(req.body, {fields: Object.keys(req.body)})
-          .then(() => res.send(note))
+    Note.findAll({}).then(notes => {
+      if(
+        notes.some(note =>
+          note && note.folderId === Number.parseInt(req.params.folderId, 10) &&
+          note.name !== 'New Note' && note.name === req.body.name)
+      ) {
+        res.status(400).send({message: 'This name is already taken!'});
+      } else {
+        Note.findById(req.params.noteId)
+          .then(note => {
+            if(!note) {
+              res.status(404).send({
+                message: 'Note Not Found',
+              });
+            }
+            note.update(req.body, {fields: Object.keys(req.body)})
+              .then(() => res.send(note))
+              .catch(error => res.status(400).send(error));
+          })
           .catch(error => res.status(400).send(error));
-      })
-      .catch(error => res.status(400).send(error));
+      }
+    });
   },
   destroy(req, res) {
     Note.findById(req.body.id)

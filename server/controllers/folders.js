@@ -4,24 +4,11 @@ module.exports = {
   create(req, res) {
     Folder.findAll({}).then(folders => {
       if(
-        folders.some(folder =>
-          folder && !folder.parentId &&
-          !req.body.parentId && folder.name === req.body.name)
-      ) {
-        res.status(400).send({message: 'This name is already taken!'});
-      } else if(
-        folders.some(folder =>
-          folder && folder.parentId &&
-          folder.parentId === Number.parseInt(req.body.parentId, 10) &&
-          req.body.name !== 'New Folder' &&
-          folder.name === req.body.name)
-      ) {
-        res.status(400).send({message: 'This name is already taken!'});
-      } else if(
-        folders.some(folder =>
-        folder && req.body.parentId &&
-        folder.name !== 'New Folder' &&
-        folder.name === req.body.name)
+        folders.some(folder => folder &&
+          (!folder.parentId && !req.body.parentId && folder.name === req.body.name) ||
+          ((folder.parentId === Number.parseInt(req.body.parentId, 10) || req.body.parentId) &&
+            req.body.name !== 'New Folder' && folder.name === req.body.name)
+        )
       ) {
         res.status(400).send({message: 'This name is already taken!'});
       } else {

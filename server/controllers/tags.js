@@ -2,13 +2,22 @@ const Tag = require('../models').Tag;
 
 module.exports = {
   create(req, res) {
-    Tag.create({
-      label: req.body.label,
-      noteId: req.params.noteId,
-      order: req.body.order,
-    })
-      .then(tag => res.send(tag))
-      .catch(error => res.status(400).send(error));
+    Tag.findAll({}).then(tags => {
+      if(
+        tags.some(tag =>
+          tag && tag.noteId === Number.parseInt(req.params.noteId, 10) &&
+          tag.label === req.body.label)
+      ) {
+        res.status(400).send({message: 'This tag is already taken!'});
+      } else {
+        Tag.create({
+          label: req.body.label,
+          noteId: req.params.noteId,
+        })
+          .then(tag => res.send(tag))
+          .catch(error => res.status(400).send(error));
+      }
+    });
   },
   list(req, res) {
     Tag.findAll({})

@@ -9,10 +9,6 @@ module.exports = {
       },
       label: {
         type: Sequelize.STRING,
-        allowNull: true,
-      },
-      order: {
-        type: Sequelize.INTEGER,
         allowNull: false,
       },
       createdAt: {

@@ -15,10 +15,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      order: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
