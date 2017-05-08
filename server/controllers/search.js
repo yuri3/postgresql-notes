@@ -2,7 +2,7 @@ const Note = require('../models').Note;
 const Tag = require('../models').Tag;
 
 module.exports = {
-  search: async (q) => {
+  search: (q) => {
     const prop = Object.keys(q)[0];
     const notes = Note.findAndCountAll({
       where: {
@@ -40,5 +40,5 @@ module.exports = {
         };
       });
     }
-  }
+  },
 };
