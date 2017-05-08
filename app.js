@@ -14,6 +14,9 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/', (req, res) => res.send({
+  message: 'Welcome.',
+}));
 require('./server/routes')(app);
 
 module.exports = app;
