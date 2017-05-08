@@ -2,10 +2,8 @@
   "name": "postgresql-notes",
   "version": "0.0.0",
   "private": true,
-  "devDependencies": {
-    "nodemon": "1.11.0"
-  },
   "dependencies": {
+    "nodemon": "1.11.0",
     "body-parser": "1.17.1",
     "express": "4.15.2",
     "grep": "0.1.0",
