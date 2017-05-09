@@ -11,12 +11,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Last-Modified', (new Date()).toUTCString());
-  res.header('Cache-Control', 'no-cache, no-store');
   next();
 });
-
-app.disable('etag');
 
 app.get('/', (req, res) => res.send({
   message: 'Welcome.',
