@@ -3,14 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "nodemon": "1.11.0",
     "body-parser": "1.17.1",
     "express": "4.15.2",
     "grep": "0.1.0",
     "morgan": "1.8.1",
+    "nodemon": "1.11.0",
     "pg": "6.1.5",
     "pg-hstore": "2.3.2",
-    "sequelize": "3.30.4"
+    "sequelize": "3.30.4",
+    "sequelize-cli": "2.7.0"
   },
   "scripts": {
     "start": "nodemon ./bin/www"
