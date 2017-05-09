@@ -14,6 +14,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.disable('etag');
+
 app.get('/', (req, res) => res.send({
   message: 'Welcome.',
 }));
